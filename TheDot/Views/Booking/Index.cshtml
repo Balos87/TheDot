@@ -1,0 +1,81 @@
+﻿@using TheDot.Models.Booking
+@model IEnumerable<BookingViewModel>
+
+@{
+    ViewData["Title"] = "Booking Manager";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center mb-8">Booking Manager</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <h3 class="bg-yellow-500 text-center py-2 text-black font-semibold mb-8">ADMIN MODE</h3>
+    }
+</div>
+<div class="container mx-auto px-6 py-8">
+    <div class="mb-4 flex justify-end">
+        <a asp-action="Create" class="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded mt-4 transition">
+            Create New Booking
+        </a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-gray-800 text-white rounded-lg shadow-lg">
+            <thead class="bg-gray-700 text-gray-300">
+                <tr>
+                    <th class="px-4 py-2 text-left">User</th>
+                    <th class="px-4 py-2 text-left">Guests</th>
+                    <th class="px-4 py-2 text-left">Reservation Date</th>
+                    <th class="px-4 py-2 text-left">End Date</th>
+                    <th class="px-4 py-2 text-left">Tables</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-gray-900 divide-y divide-gray-700">
+                @foreach (var booking in Model)
+                {
+                    <tr>
+                        <td class="px-4 py-2">
+                            @(booking.FirstName != null ? $"{booking.FirstName} {booking.LastName}" : "User not found")
+                        </td>
+                        <td class="px-4 py-2">@booking.NumberOfGuests</td>
+                        <td class="px-4 py-2">@booking.ReservationDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="px-4 py-2">@booking.EndDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="px-4 py-2">
+                            @if (booking.Tables != null && booking.Tables.Any())
+                            {
+                                <ul class="list-disc pl-5">
+                                    @foreach (var table in booking.Tables)
+                                    {
+                                        <li>Table @table.TableNumber (Seats: @table.Seats)</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>No tables assigned</span>
+                            }
+                        </td>
+                        <td class="px-4 py-2 flex space-x-3">
+                            <a asp-action="Edit" asp-route-id="@booking.BookingId" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition">
+                                Edit
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@booking.BookingId" method="post" class="inline-block">
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded transition">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-4 py-4 text-center text-gray-400">No bookings available</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

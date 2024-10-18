@@ -1,0 +1,67 @@
+﻿@using TheDot.Models.Dish
+@model IEnumerable<DishViewModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+    var userName = User.Identity.IsAuthenticated ? User.Identity.Name : null;
+    bool isLoggedIn = !string.IsNullOrEmpty(userName);
+    Layout = "_Layout";
+}
+
+<body class="bg-gray-900 text-white">
+    <div class="text-center py-12">
+        <h1 class="text-4xl font-bold">
+            @if (isLoggedIn && (User.IsInRole("Admin") || User.IsInRole("Customer") || User.IsInRole("Employee")))
+            {
+                <text>Welcome @userName!</text>
+            }
+            else
+            {
+                <text>Welcome to The Dot</text>
+            }
+        </h1>
+        <h4 class="text-gray-400 mt-4">
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Customer"))
+                {
+                    <p>We are looking forward to giving you the best culinary experience!</p>
+                }
+                else if (User.IsInRole("Admin"))
+                {
+                    <h4 class="bg-red-500 text-white py-2 px-4 rounded-lg mt-4">~ Admin privileges active ~</h4>
+                }
+                else if (User.IsInRole("Employee"))
+                {
+                    <h4 class="bg-yellow-500 text-gray-900 py-2 px-4 rounded-lg mt-4">~ Employee privileges active ~</h4>
+                }
+            }
+            else
+            {
+                <p>The best place to eat in the Northern Hemisphere!<br><br>Log in now to book your table for an exclusive dining experience!</p>
+            }
+        </h4>
+    </div>
+
+    <div class="relative mx-auto" style="max-width: 320px;">
+        <img id="galleryImage" src="/images/dishes/Verdure alla Griglia.jpg" alt="Verdure alla Griglia" class="w-full h-auto object-cover rounded-lg">
+    </div>
+
+    <div class="mt-22 mb-16"></div>
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-semibold text-center mb-8">Our Most Desired Meals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var dish in Model)
+            {
+                if (dish.Popular && dish.IsAvailable)
+                {
+                    <div class="bg-gray-800 rounded-lg shadow-md p-6 text-center transition-transform duration-500 hover:scale-105">
+                        <h5 class="text-xl font-semibold text-white mb-2">@dish.DishName</h5>
+                        <p class="text-gray-400 mb-4">@dish.Description</p>
+                        <p class="text-lg font-bold text-white">Price: @dish.Price.ToString("C")</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</body>

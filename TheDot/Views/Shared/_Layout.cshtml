@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - The Dot</title>
+
+    <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
+
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+</head>
+<body class="bg-gray-900 text-white font-sans antialiased">
+
+    <header>
+        <nav class="fixed w-full bg-gray-800 bg-opacity-90 backdrop-blur-sm shadow-lg z-50">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+                <a href="/" class="text-2xl font-semibold text-white flex items-center space-x-2">
+                    <img src="~/images/Logo.jpg" alt="Logo" class="h-10 w-auto">
+                    <span>The Dot</span>
+                </a>
+
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="http://localhost:5173/" class="text-red-500 hover:text-red-300 transition duration-300">Book Your Table Here</a>
+                    <a class="hover:text-green-400 transition duration-300 @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "text-green-400" : "text-white")"
+                       asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="hover:text-green-400 transition duration-300 @(ViewContext.RouteData.Values["controller"].ToString() == "Menu" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "text-green-400" : "text-white")"
+                       asp-controller="Menu" asp-action="Index">Menu</a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Login" asp-action="Logout" method="post">
+                            <button type="submit" class="text-white hover:text-red-500 transition duration-300">Logout</button>
+                        </form>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="hover:text-green-400 transition duration-300 @(ViewContext.RouteData.Values["controller"].ToString() == "Booking" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "text-green-400" : "text-white")"
+                               asp-controller="Booking" asp-action="Index">Manage Bookings</a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="hover:text-green-400 transition duration-300 text-white" asp-controller="Login" asp-action="Login">Login</a>
+                    }
+                </div>
+
+                <div class="md:hidden">
+                    <button id="navToggle" class="text-white focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mobileMenu" class="hidden md:hidden">
+                <div class="flex flex-col items-center space-y-4 mt-4">
+                    <a href="http://localhost:5173/" target="_blank" class="text-red-500 hover:text-red-300 transition duration-300">Book Your Table Here</a>
+                    <a href="/" class="text-white hover:text-green-400 transition duration-300">Home</a>
+                    <a href="/menu" class="text-white hover:text-green-400 transition duration-300">Menu</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Login" asp-action="Logout" method="post">
+                            <button type="submit" class="text-white hover:text-red-500 transition duration-300">Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="text-white hover:text-green-400 transition duration-300" asp-controller="Login" asp-action="Login">Login</a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Booking" asp-action="Index">
+                            <button type="submit" class="text-white hover:text-red-500 transition duration-300">Manage Bookings</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="pt-24">
+        <main class="container mx-auto px-6 py-8">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="bg-gray-800 text-center py-4">
+        <div class="container mx-auto px-6">
+            <p class="text-gray-400">&copy; 2024 - The Dot. All rights reserved. <a href="#" class="hover:text-green-400">Privacy</a></p>
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', function () {
+            var menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

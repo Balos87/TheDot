@@ -1,0 +1,50 @@
+﻿@using TheDot.Models.Dish
+@model CreateDishViewModel
+
+@{
+    ViewData["Title"] = "Create a Dish";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-8 text-center">Create New Dish</h2>
+
+    <div class="max-w-lg mx-auto bg-gray-900 p-6 rounded-lg shadow-lg">
+        <form asp-action="CreateDish" method="post">
+            <div class="mb-4">
+                <label for="DishName" class="block text-gray-300">Dish Name</label>
+                <input type="text" id="DishName" name="DishName" class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white" value="@Model.DishName" required />
+                <span asp-validation-for="DishName" class="text-red-500"></span>
+            </div>
+
+            <div class="mb-4">
+                <label for="Description" class="block text-gray-300">Description</label>
+                <textarea id="Description" name="Description" class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white" maxlength="1000">@Model.Description</textarea>
+                <span asp-validation-for="Description" class="text-red-500"></span>
+            </div>
+
+            <div class="mb-4">
+                <label for="Price" class="block text-gray-300">Price</label>
+                <input type="number" id="Price" name="Price" step="0.01" class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white" value="@Model.Price" required />
+                <span asp-validation-for="Price" class="text-red-500"></span>
+            </div>
+
+            <div class="mb-4">
+                <label for="IsAvailable" class="block text-gray-300">Available</label>
+                <input type="checkbox" id="IsAvailable" name="IsAvailable" value="true" class="mr-2 leading-tight" @(Model.IsAvailable ? "checked" : "") />
+            </div>
+
+            <div class="mb-4">
+                <label for="Popular" class="block text-gray-300">Popular</label>
+                <input type="checkbox" id="Popular" name="Popular" value="true" class="mr-2 leading-tight" @(Model.Popular ? "checked" : "") />
+            </div>
+
+            <div class="flex justify-between">
+                <a href="~/Menu/Index" class="bg-gray-600 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition">Cancel</a>
+
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white py-2 px-4 rounded-lg transition">
+                    Create Dish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
